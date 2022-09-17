@@ -2,7 +2,8 @@ import React, { lazy } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { v4 as uuidv4, v4 } from "uuid";
+import { BsPlusCircleFill } from "react-icons/bs";
+import { BsDashCircleFill } from "react-icons/bs";
 export default function Index() {
   const [inputNum, setInputNum] = useState(0);
   const [complete, setComlete] = useState([]);
@@ -19,7 +20,7 @@ export default function Index() {
     if (type === "1-2") {
       let temp = arr1.splice(startIndex, 1);
       arr2 = [...arr2, ...temp];
-      setPrepare(prepare);
+      setPrepare([...prepare]);
       setLearning(arr2);
     } else if (type === "1-3") {
       let temp = arr1.splice(startIndex, 1);
@@ -51,7 +52,7 @@ export default function Index() {
       );
     } else if (
       result.source.droppableId === "droppable-1" &&
-      result.destination.droppableId === "droppable-2"
+      result.destination.droppableId === "droppable-3"
     ) {
       move(
         prepare,
@@ -73,11 +74,16 @@ export default function Index() {
       );
     }
   };
-  const handleDelete = (index) => {
-    let arr = learning.splice(index, 1);
+  const handleDelete = (index, type) => {
+    if (type === "learning") {
+      learning.splice(index, 1);
 
-    setLearning([...learning]);
-    console.log(arr);
+      setLearning([...learning]);
+    } else if (type === "complete") {
+      complete.splice(index, 1);
+
+      setComlete([...complete]);
+    }
   };
   return (
     <IndexContainer>
@@ -173,12 +179,13 @@ export default function Index() {
                                     type="text"
                                     value={item.content}
                                   ></input>
-                                  <button
-                                    className="delete"
-                                    onClick={() => handleDelete(index)}
-                                  >
-                                    x
-                                  </button>
+                                  <BsDashCircleFill
+                                    size="10%"
+                                    color="white"
+                                    onClick={() =>
+                                      handleDelete(index, "learning")
+                                    }
+                                  ></BsDashCircleFill>
                                 </div>
                               </div>
                             )}
@@ -229,7 +236,13 @@ export default function Index() {
                             >
                               <div className="input">
                                 <input type="text" value={item.content}></input>
-                                <button className="delete">x</button>
+                                <BsDashCircleFill
+                                  size="10%"
+                                  color="white"
+                                  onClick={() =>
+                                    handleDelete(index, "complete")
+                                  }
+                                ></BsDashCircleFill>
                               </div>
                             </div>
                           )}
@@ -291,6 +304,9 @@ const IndexContainer = styled.div`
         height: 25%;
         margin-bottom: 1rem;
         border-radius: 10rem;
+      }
+      button:hover {
+        opacity: 70%;
       }
     }
   }
