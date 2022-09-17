@@ -135,17 +135,23 @@ export default function Index() {
             );
           }}
         </Droppable>
-        <Droppable droppableId="droppable-2">
-          {(provided, snapshot) => {
-            return (
-              <div
-                //provided.droppableProps应用的相同元素.
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
-              >
-                <div className="learning">
-                  <div className="head">Learing...</div>
+        <div className="learning">
+          <div className="head">Learing...</div>
+          <Droppable droppableId="droppable-2">
+            {(provided, snapshot) => {
+              return (
+                <div
+                  //provided.droppableProps应用的相同元素.
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={
+                    snapshot.isDraggingOver
+                      ? { border: "blue 2px solid" }
+                      : {
+                          border: "black 2px solid",
+                        }
+                  }
+                >
                   <div className="container">
                     <div className="body" id="body">
                       {learning.map((item, index) => {
@@ -171,7 +177,7 @@ export default function Index() {
                                     className="delete"
                                     onClick={() => handleDelete(index)}
                                   >
-                                    X
+                                    x
                                   </button>
                                 </div>
                               </div>
@@ -182,22 +188,32 @@ export default function Index() {
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          }}
-        </Droppable>
-        <Droppable droppableId="droppable-3">
-          {(provided, snapshot) => {
-            return (
-              <div
-                //provided.droppableProps应用的相同元素.
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
-              >
-                <div className="complete">
-                  <div className="head">Complete</div>
-                  <div className="container">
+              );
+            }}
+          </Droppable>
+        </div>
+        <div className="learning">
+          <div className="head" style={{ backgroundColor: "grey" }}>
+            Complete
+          </div>
+          <Droppable droppableId="droppable-3">
+            {(provided, snapshot) => {
+              return (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  style={
+                    snapshot.isDraggingOver
+                      ? { border: "blue 2px solid" }
+                      : {
+                          border: "black 2px solid",
+                        }
+                  }
+                >
+                  <div
+                    className="container"
+                    style={{ backgroundColor: "grey" }}
+                  >
                     <div className="body" id="body">
                       {complete.map((item, index) => (
                         <Draggable
@@ -222,10 +238,10 @@ export default function Index() {
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          }}
-        </Droppable>
+              );
+            }}
+          </Droppable>
+        </div>
       </DragDropContext>
     </IndexContainer>
   );
@@ -281,6 +297,7 @@ const IndexContainer = styled.div`
   .learning {
     display: flex;
     gap: 1rem;
+    border: white 1.5px solid;
     flex-direction: column;
     .head {
       background-color: #6db57c;
@@ -303,58 +320,19 @@ const IndexContainer = styled.div`
           display: flex;
           flex-direction: row;
           justify-content: center;
+          gap: 0.1rem;
+
           input {
             width: 80%;
             border: 1.5px solid;
           }
-          button {
-            width: 0.5rem;
-            height: 1rem;
-            border-radius: 15rem;
+          .delete {
+            width: 20px;
+            height: 20px;
+            border-radius: 60%;
+            position: relative;
           }
         }
-      }
-    }
-  }
-  .complete {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
-    .head {
-      background-color: #c9c7c7;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      width: 10vw;
-      min-height: 50vh;
-      background-color: #c9c7c7;
-      .body {
-        padding: 1rem;
-        width: 80%;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-direction: column;
-        .input {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          input {
-            width: 80%;
-            border: 1.5px solid;
-          }
-          button {
-            width: 0.5rem;
-            height: 1rem;
-            border-radius: 15rem;
-          }
-        }
-      }
-      button {
-        width: 50%;
-        margin-bottom: 1rem;
       }
     }
   }
