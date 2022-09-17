@@ -1,9 +1,10 @@
-import React, { lazy } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { BsPlusCircleFill } from "react-icons/bs";
-import { BsDashCircleFill } from "react-icons/bs";
+import { DragDropContext } from "react-beautiful-dnd";
+import Learning from "../components/Learning";
+import Complete from "../components/Complete";
+import Prepare from "../components/Prepare";
 export default function Index() {
   const [inputNum, setInputNum] = useState(0);
   const [complete, setComlete] = useState([]);
@@ -88,173 +89,16 @@ export default function Index() {
   return (
     <IndexContainer>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable-1">
-          {(provided, snapshot) => {
-            return (
-              <div
-                //provided.droppableProps应用的相同元素.
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
-              >
-                <div className="prepare">
-                  <div className="head">Prepare to Study</div>
-                  <div className="container">
-                    <div className="body" id="body">
-                      {prepare.map((item, index) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              // style={getItemStyle(
-                              //   snapshot.isDragging,
-                              //   provided.draggableProps.style
-                              // )}
-                            >
-                              <div className="input">
-                                <input
-                                  type="text"
-                                  id={item.id}
-                                  onChange={() => {
-                                    item.content = document.getElementById(
-                                      item.id
-                                    ).value;
-                                    console.log(item.content);
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </div>
-                    <button onClick={() => addInput()}>+</button>
-                  </div>
-                </div>
-              </div>
-            );
-          }}
-        </Droppable>
-        <div className="learning">
-          <div className="head">Learing...</div>
-          <Droppable droppableId="droppable-2">
-            {(provided, snapshot) => {
-              return (
-                <div
-                  //provided.droppableProps应用的相同元素.
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={
-                    snapshot.isDraggingOver
-                      ? { border: "blue 2px solid" }
-                      : {
-                          border: "black 2px solid",
-                        }
-                  }
-                >
-                  <div className="container">
-                    <div className="body" id="body">
-                      {learning.map((item, index) => {
-                        console.log(item);
-                        return (
-                          <Draggable
-                            key={item.id}
-                            draggableId={item.id}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <div className="input">
-                                  <input
-                                    type="text"
-                                    value={item.content}
-                                  ></input>
-                                  <BsDashCircleFill
-                                    size="10%"
-                                    color="white"
-                                    onClick={() =>
-                                      handleDelete(index, "learning")
-                                    }
-                                  ></BsDashCircleFill>
-                                </div>
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              );
-            }}
-          </Droppable>
-        </div>
-        <div className="learning">
-          <div className="head" style={{ backgroundColor: "grey" }}>
-            Complete
-          </div>
-          <Droppable droppableId="droppable-3">
-            {(provided, snapshot) => {
-              return (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  style={
-                    snapshot.isDraggingOver
-                      ? { border: "blue 2px solid" }
-                      : {
-                          border: "black 2px solid",
-                        }
-                  }
-                >
-                  <div
-                    className="container"
-                    style={{ backgroundColor: "grey" }}
-                  >
-                    <div className="body" id="body">
-                      {complete.map((item, index) => (
-                        <Draggable
-                          key={item.id}
-                          draggableId={item.id}
-                          index={index + 20}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <div className="input">
-                                <input type="text" value={item.content}></input>
-                                <BsDashCircleFill
-                                  size="10%"
-                                  color="white"
-                                  onClick={() =>
-                                    handleDelete(index, "complete")
-                                  }
-                                ></BsDashCircleFill>
-                              </div>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            }}
-          </Droppable>
-        </div>
+        <Prepare prepare={prepare} addInput={() => addInput()}></Prepare>
+
+        <Learning
+          learning={learning}
+          handleDelete={() => handleDelete(learning, "learning")}
+        ></Learning>
+        <Complete
+          complete={complete}
+          handleDelete={() => handleDelete(complete, "complete")}
+        ></Complete>
       </DragDropContext>
     </IndexContainer>
   );
@@ -268,88 +112,4 @@ const IndexContainer = styled.div`
   margin-top: 10%;
   margin-left: 15%;
   margin-right: 15%;
-  .prepare {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
-    .head {
-      background-color: #a98181;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 10vw;
-      min-height: 50vh;
-      background-color: #a98181;
-      .body {
-        gap: 1rem;
-
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        .input {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          input {
-            width: 80%;
-            border: 1.5px solid;
-          }
-        }
-      }
-      button {
-        width: width;
-        height: 25%;
-        margin-bottom: 1rem;
-        border-radius: 10rem;
-      }
-      button:hover {
-        opacity: 70%;
-      }
-    }
-  }
-  .learning {
-    display: flex;
-    gap: 1rem;
-    border: white 1.5px solid;
-    flex-direction: column;
-    .head {
-      background-color: #6db57c;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 10vw;
-      min-height: 50vh;
-      background-color: #6db57c;
-      .body {
-        padding: 1rem;
-        width: 80%;
-        display: flex;
-        gap: 1rem;
-        flex-direction: column;
-        .input {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          gap: 0.1rem;
-
-          input {
-            width: 80%;
-            border: 1.5px solid;
-          }
-          .delete {
-            width: 20px;
-            height: 20px;
-            border-radius: 60%;
-            position: relative;
-          }
-        }
-      }
-    }
-  }
 `;

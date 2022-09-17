@@ -25,6 +25,7 @@ const LoginContainer = styled.div`
   width: 100vw;
 
   button {
+    background-color: #a98181;
     width: 20rem;
     height: 10rem;
     font-size: 3rem;
