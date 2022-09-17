@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { v4 as uuidv4, v4 } from "uuid";
+
+import { BsPlusCircleFill } from "react-icons/bs";
+import { BsDashCircleFill } from "react-icons/bs";
+
 export default function Index() {
   const [inputNum, setInputNum] = useState(0);
   const [complete, setComlete] = useState([]);
@@ -89,9 +93,9 @@ export default function Index() {
                 //provided.droppableProps应用的相同元素.
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
+              // style={getListStyle(snapshot.isDraggingOver)}
               >
-                <div className="prepare">
+                <div className="task-tab prepare">
                   <div className="head">Prepare to Study</div>
                   <div className="container">
                     <div className="body" id="body">
@@ -106,10 +110,10 @@ export default function Index() {
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              // style={getItemStyle(
-                              //   snapshot.isDragging,
-                              //   provided.draggableProps.style
-                              // )}
+                            // style={getItemStyle(
+                            //   snapshot.isDragging,
+                            //   provided.draggableProps.style
+                            // )}
                             >
                               <div className="input">
                                 <input
@@ -128,7 +132,9 @@ export default function Index() {
                         </Draggable>
                       ))}
                     </div>
-                    <button onClick={() => addInput()}>+</button>
+                    <button onClick={() => addInput()}>
+                      <BsPlusCircleFill className="icon" color="#f0f0f0" size="100%" />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -142,9 +148,9 @@ export default function Index() {
                 //provided.droppableProps应用的相同元素.
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
+              // style={getListStyle(snapshot.isDraggingOver)}
               >
-                <div className="learning">
+                <div className="task-tab learning">
                   <div className="head">Learing...</div>
                   <div className="container">
                     <div className="body" id="body">
@@ -193,9 +199,9 @@ export default function Index() {
                 //provided.droppableProps应用的相同元素.
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
+              // style={getListStyle(snapshot.isDraggingOver)}
               >
-                <div className="complete">
+                <div className="task-tab complete">
                   <div className="head">Complete</div>
                   <div className="container">
                     <div className="body" id="body">
@@ -231,6 +237,7 @@ export default function Index() {
   );
 }
 
+
 const IndexContainer = styled.div`
   display: flex;
   justify-content: space-around;
@@ -239,12 +246,12 @@ const IndexContainer = styled.div`
   margin-top: 10%;
   margin-left: 15%;
   margin-right: 15%;
-  .prepare {
+
+  .task-tab {
     display: flex;
     gap: 1rem;
     flex-direction: column;
     .head {
-      background-color: #a98181;
       text-align: center;
     }
     .container {
@@ -253,7 +260,6 @@ const IndexContainer = styled.div`
       align-items: center;
       width: 10vw;
       min-height: 50vh;
-      background-color: #a98181;
       .body {
         gap: 1rem;
 
@@ -271,91 +277,44 @@ const IndexContainer = styled.div`
         }
       }
       button {
-        width: width;
-        height: 25%;
-        margin-bottom: 1rem;
-        border-radius: 10rem;
+        border: 0;
+        width: 30%;
+        background-color:transparent;
+
+        .icon {
+          width: 100%;
+          color: #f0f0f0;
+        }
       }
     }
   }
+
+  
+  .prepare {
+    .head {
+      background-color: #a98181;
+    }
+    .container {
+      background-color: #a98181;
+    }
+  }
+
   .learning {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
     .head {
       background-color: #6db57c;
-      text-align: center;
     }
     .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 10vw;
-      min-height: 50vh;
       background-color: #6db57c;
-      .body {
-        padding: 1rem;
-        width: 80%;
-        display: flex;
-        gap: 1rem;
-        flex-direction: column;
-        .input {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          input {
-            width: 80%;
-            border: 1.5px solid;
-          }
-          button {
-            width: 0.5rem;
-            height: 1rem;
-            border-radius: 15rem;
-          }
-        }
-      }
     }
   }
+
   .complete {
-    display: flex;
-    gap: 1rem;
-    flex-direction: column;
     .head {
       background-color: #c9c7c7;
-      text-align: center;
     }
     .container {
-      display: flex;
-      flex-direction: column;
-      width: 10vw;
-      min-height: 50vh;
       background-color: #c9c7c7;
-      .body {
-        padding: 1rem;
-        width: 80%;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        flex-direction: column;
-        .input {
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          input {
-            width: 80%;
-            border: 1.5px solid;
-          }
-          button {
-            width: 0.5rem;
-            height: 1rem;
-            border-radius: 15rem;
-          }
-        }
-      }
-      button {
-        width: 50%;
-        margin-bottom: 1rem;
-      }
     }
-  }
-`;
+  }  
+
+`
