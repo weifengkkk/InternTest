@@ -1,7 +1,4 @@
-import React from "react";
-import Prepare from "../components/Prepare";
-import Learning from "../components/Learning";
-import Complete from "../components/Complete";
+import React, { lazy } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -14,45 +11,86 @@ export default function Index() {
   // 元素移动
 
   const addInput = () => {
-    // let body = document.getElementById("body");
-    // let input = document.createElement("input");
-    // input.id = `input_${inputNum}`;
-    // input.onchange = () => pushData(input.id, input.value);
-    // body.appendChild(input);
-
     prepare.push({ id: `item-${inputNum + 1}`, content: "" });
     setPrepare(prepare);
     setInputNum(inputNum + 1);
   };
-  const move = (arr1, startIndex, arr2, toIndex) => {
-    let temp = arr1.splice(startIndex, 1);
-    console.log("log", arr2, temp);
-    arr2 = [...arr2, ...temp];
-    console.log(prepare, learning);
-    setPrepare(prepare);
-    setLearning(arr2);
+  const move = (arr1, startIndex, arr2, toIndex, type) => {
+    if (type === "1-2") {
+      let temp = arr1.splice(startIndex, 1);
+      arr2 = [...arr2, ...temp];
+      setPrepare(prepare);
+      setLearning(arr2);
+    } else if (type === "1-3") {
+      let temp = arr1.splice(startIndex, 1);
+      arr2 = [...arr2, ...temp];
+      setPrepare(prepare);
+      setComlete(arr2);
+    } else if (type === "2-3") {
+      let temp = arr1.splice(startIndex, 1);
+      arr2 = [...arr2, ...temp];
+      setLearning(learning);
+      setComlete(arr2);
+    }
   };
   const onDragEnd = (result) => {
     console.log(result);
     if (!result.destination) {
       return;
     }
-    console.log(learning);
-    move(prepare, result.source.index, learning, result.destination.index - 10);
+    if (
+      result.source.droppableId === "droppable-1" &&
+      result.destination.droppableId === "droppable-2"
+    ) {
+      move(
+        prepare,
+        result.source.index,
+        learning,
+        result.destination.index,
+        "1-2"
+      );
+    } else if (
+      result.source.droppableId === "droppable-1" &&
+      result.destination.droppableId === "droppable-2"
+    ) {
+      move(
+        prepare,
+        result.source.index,
+        complete,
+        result.destination.index,
+        "1-3"
+      );
+    } else if (
+      result.source.droppableId === "droppable-2" &&
+      result.destination.droppableId === "droppable-3"
+    ) {
+      move(
+        learning,
+        result.source.index,
+        complete,
+        result.destination.index,
+        "2-3"
+      );
+    }
   };
+  const handleDelete = (index) => {
+    let arr = learning.splice(index, 1);
 
+    setLearning([...learning]);
+    console.log(arr);
+  };
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(provided, snapshot) => {
-          return (
-            <div
-              //provided.droppableProps应用的相同元素.
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              // style={getListStyle(snapshot.isDraggingOver)}
-            >
-              <IndexContainer>
+    <IndexContainer>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable-1">
+          {(provided, snapshot) => {
+            return (
+              <div
+                //provided.droppableProps应用的相同元素.
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                // style={getListStyle(snapshot.isDraggingOver)}
+              >
                 <div className="prepare">
                   <div className="head">Prepare to Study</div>
                   <div className="container">
@@ -73,7 +111,7 @@ export default function Index() {
                               //   provided.draggableProps.style
                               // )}
                             >
-                              <div>
+                              <div className="input">
                                 <input
                                   type="text"
                                   id={item.id}
@@ -90,9 +128,22 @@ export default function Index() {
                         </Draggable>
                       ))}
                     </div>
-                    <button onClick={() => addInput()}>添加</button>
+                    <button onClick={() => addInput()}>+</button>
                   </div>
                 </div>
+              </div>
+            );
+          }}
+        </Droppable>
+        <Droppable droppableId="droppable-2">
+          {(provided, snapshot) => {
+            return (
+              <div
+                //provided.droppableProps应用的相同元素.
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                // style={getListStyle(snapshot.isDraggingOver)}
+              >
                 <div className="learning">
                   <div className="head">Learing...</div>
                   <div className="container">
@@ -103,7 +154,7 @@ export default function Index() {
                           <Draggable
                             key={item.id}
                             draggableId={item.id}
-                            index={index + 10}
+                            index={index}
                           >
                             {(provided, snapshot) => (
                               <div
@@ -111,8 +162,17 @@ export default function Index() {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                               >
-                                <div>
-                                  <input type="text" value={item.content} />
+                                <div className="input">
+                                  <input
+                                    type="text"
+                                    value={item.content}
+                                  ></input>
+                                  <button
+                                    className="delete"
+                                    onClick={() => handleDelete(index)}
+                                  >
+                                    X
+                                  </button>
                                 </div>
                               </div>
                             )}
@@ -122,6 +182,19 @@ export default function Index() {
                     </div>
                   </div>
                 </div>
+              </div>
+            );
+          }}
+        </Droppable>
+        <Droppable droppableId="droppable-3">
+          {(provided, snapshot) => {
+            return (
+              <div
+                //provided.droppableProps应用的相同元素.
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                // style={getListStyle(snapshot.isDraggingOver)}
+              >
                 <div className="complete">
                   <div className="head">Complete</div>
                   <div className="container">
@@ -130,7 +203,7 @@ export default function Index() {
                         <Draggable
                           key={item.id}
                           draggableId={item.id}
-                          index={index}
+                          index={index + 20}
                         >
                           {(provided, snapshot) => (
                             <div
@@ -138,8 +211,9 @@ export default function Index() {
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
                             >
-                              <div>
-                                <input type="text" />
+                              <div className="input">
+                                <input type="text" value={item.content}></input>
+                                <button className="delete">x</button>
                               </div>
                             </div>
                           )}
@@ -148,12 +222,12 @@ export default function Index() {
                     </div>
                   </div>
                 </div>
-              </IndexContainer>
-            </div>
-          );
-        }}
-      </Droppable>
-    </DragDropContext>
+              </div>
+            );
+          }}
+        </Droppable>
+      </DragDropContext>
+    </IndexContainer>
   );
 }
 
@@ -161,11 +235,7 @@ const IndexContainer = styled.div`
   display: flex;
   justify-content: space-around;
   flex-direction: row;
-  input {
-    width: 8vw;
-    height: 2vh;
-    border: 1.5px solid;
-  }
+
   margin-top: 10%;
   margin-left: 15%;
   margin-right: 15%;
@@ -185,13 +255,26 @@ const IndexContainer = styled.div`
       min-height: 50vh;
       background-color: #a98181;
       .body {
+        gap: 1rem;
+
         padding: 1rem;
         display: flex;
         flex-direction: column;
+        .input {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          input {
+            width: 80%;
+            border: 1.5px solid;
+          }
+        }
       }
       button {
-        width: 50%;
+        width: width;
+        height: 25%;
         margin-bottom: 1rem;
+        border-radius: 10rem;
       }
     }
   }
@@ -216,10 +299,20 @@ const IndexContainer = styled.div`
         display: flex;
         gap: 1rem;
         flex-direction: column;
-      }
-      button {
-        width: 50%;
-        margin-bottom: 1rem;
+        .input {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          input {
+            width: 80%;
+            border: 1.5px solid;
+          }
+          button {
+            width: 0.5rem;
+            height: 1rem;
+            border-radius: 15rem;
+          }
+        }
       }
     }
   }
@@ -244,6 +337,20 @@ const IndexContainer = styled.div`
         align-items: center;
         gap: 1rem;
         flex-direction: column;
+        .input {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          input {
+            width: 80%;
+            border: 1.5px solid;
+          }
+          button {
+            width: 0.5rem;
+            height: 1rem;
+            border-radius: 15rem;
+          }
+        }
       }
       button {
         width: 50%;
